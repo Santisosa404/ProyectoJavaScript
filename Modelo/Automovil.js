@@ -1,7 +1,7 @@
-class Automovil {
-    constructor(matricula,horaLlegada,horaSalida){
+export class Automovil {
+    constructor(matricula,tipo){
         this.matricula=matricula;
-        this.horaLlegada=horaLlegada;
-        this.horaSalida=horaSalida;
+        this.tipo = tipo;
     }
 }
+

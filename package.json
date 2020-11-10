@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "name": "parking",
+  "version": "1.0.0",
+  "description": "Proyecto de javaScript",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Santisosa404/ProyectoJavaScript.git"
+  },
+  "author": "santi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Santisosa404/ProyectoJavaScript/issues"
+  },
+  "homepage": "https://github.com/Santisosa404/ProyectoJavaScript#readme"
+}
