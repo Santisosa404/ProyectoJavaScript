@@ -6,6 +6,7 @@ import * as readline from "readline-sync";
 import { VehiculoRepositorio } from './Repositorios/VehiculoRepositorio.js';
 import { Ticket } from './Modelo/Ticket.js';
 import {TicketRepositorio} from './Repositorios/TicketRepositorio.js';
+import {VehiculoServicio} from './Servicios/VehiculoServicio.js';
 
 let listaVehiculos = [];
 let matricula = "";
@@ -22,6 +23,7 @@ let parkingGeneral = new Parking(listaVehiculos);
 
 let repositorioVehiculo = new VehiculoRepositorio(parkingGeneral.listaVehiculos);
 let ticketRepositorio = new TicketRepositorio();
+let servicioVehiculo = new VehiculoServicio(repositorioVehiculo);
 let opcion =-1;
 
 do {
@@ -59,16 +61,16 @@ do {
                         console.log(`Quedan  plazas disponibles`);
                         matricula = readline.question("Para ingresar un vehiculo diga su matricula")
                         let tipo = readline.question("Tipo de vehiculo a ingresar");
-                        repositorioVehiculo.agregarVehiculo(new Vehiculo(matricula, Math.random(), tipo, null));
+                        servicioVehiculo.agregarVehiculo(new Vehiculo(matricula, (Math.random()*(45-1)-1), tipo, null,Math.floor((Math.random()*(45-1)-1))));
                         ticketRepositorio.imprimirTicketDeposito(ticketRepositorio.generarTicket(repositorioVehiculo.buscarPorMatricula(matricula)));
-                        console.log(parkingGeneral.lis);
-                        break;
+                    break;
+
                     case '2':
                         matricula = readline.question("Introduzca su matricula");
                         let idPlaza = readline.question("Introduz el numero de plaza");
                         let pin = readline.question("Introduzca el pin de recogida")
                         
-                        break;
+                    break;
                     default:
                         break;
                 }

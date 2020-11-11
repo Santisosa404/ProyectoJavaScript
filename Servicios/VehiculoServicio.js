@@ -1,4 +1,4 @@
-class VehiculoServicio{
+export class VehiculoServicio{
 
     constructor(VehiculoRepositorio){
         this.VehiculoRepositorio = VehiculoRepositorio;
@@ -13,5 +13,8 @@ class VehiculoServicio{
         }
     }
 
+    agregarVehiculo(vehiculo){
+        return this.VehiculoRepositorio.agregarVehiculo(vehiculo);
+    }
 
 }

@@ -2,23 +2,22 @@ import {Ticket} from '../Modelo/Ticket.js';
 
 export class TicketRepositorio{
 
-    generarTicket(matricula,fechaLlegada,identificador){
-        return new Ticket(matricula,fechaLlegada,identificador);
+    generarTicket(vehiculo){
+        return new Ticket(vehiculo.matricula,new Date(),vehiculo.id);
     }
 
-    imprimirTicketDeposito(Ticket){
-
-        Ticket.pin=this.generarPin();
-        console.log(`Vehiculo con matricula: ${Ticket.matricula}\n`)
-        console.log(`Fecha llegada ${Ticket.fechaLlegada}\n`);
-        console.log(`Su pin para recoger el vehiculo es ${Ticket.pin}`);
+    imprimirTicketDeposito(ticket){
+        ticket.pin=this.generarPin();
+        console.log(`Vehiculo con matricula: ${ticket.matricula}\n`)
+        console.log(`Fecha llegada ${ticket.fechaLlegada}\n`);
+        console.log(`Su pin para recoger el vehiculo es ${ticket.pin}`);
     }
-    imprimirTicketRetirarda(Ticket){
-        Ticket.fechaLlegada = new Date();
-        console.log(`Vehiculo con matricula: ${Ticket.matricula}\n`)
-        console.log(`Fecha llegada ${Ticket.fechaLlegada}\n`);
-        console.log(`Fecha salida ${Ticket.fechaSalida}\n`);
-        console.log(`El precio de su estancia es de ${Ticket.precio}`);
+    imprimirTicketRetirarda(ticket){
+        ticket.fechaLlegada = new Date();
+        console.log(`Vehiculo con matricula: ${ticket.matricula}\n`)
+        console.log(`Fecha llegada ${ticket.fechaLlegada}\n`);
+        console.log(`Fecha salida ${ticket.fechaSalida}\n`);
+        console.log(`El precio de su estancia es de ${ticket.precio}`);
  
     }
     generarPin(){
