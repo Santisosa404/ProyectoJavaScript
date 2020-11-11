@@ -1,9 +1,13 @@
 export class Parking {
     numPlazas =45;
-    constructor(listaMotocicletas,listaTurismos,listaCaravanas){
-        this.listaMotocicletas = listaMotocicletas;
-        this.listaTurismos = listaTurismos;
-        this.listaCaravanas=listaCaravanas;
+    
+    constructor(listaVehiculos){
+        this.listaVehiculos=listaVehiculos;
     }
+    
+    setNumPlazas(numPlazas){
+        this.numPlazas=numPlazas;
+    }
+
 
 }

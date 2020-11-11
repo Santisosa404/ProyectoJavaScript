@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Santisosa404/ProyectoJavaScript/issues"
   },
-  "homepage": "https://github.com/Santisosa404/ProyectoJavaScript#readme"
+  "homepage": "https://github.com/Santisosa404/ProyectoJavaScript#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
 }

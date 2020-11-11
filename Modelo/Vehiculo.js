@@ -1,20 +1,40 @@
 export class Vehiculo{
-    constructor(matricula, id,tipo){
+    matricula;
+    id;
+    tipo;
+    usuario;
+    constructor(matricula, id,tipo,usuario){
         this.matricula=matricula;
         this.id = id;
         this.tipo=tipo;
+        this.usuario=usuario;
     }
 
-    get id(){
+    getId(){
         return this.id;
      }
  
-    get matricula(){
+    getMatricula(){
          return this.matricula;
      }
+     getUsuario(){
+         return this.usuario;
+     }
  
-     get tipo(){
+     getTipo(){
          return this.tipo;
+     }
+     setUsuario(usuario){
+        this.usuario=usuario;
+     }
+     setMatricula(matricula){
+         this.matricula=matricula;
+     }
+     setId(id){
+        this.id=id;
+     }
+     setTipo(tipo){
+         this.tipo=tipo;
      }
 }
 

@@ -1,25 +1,20 @@
-class VehiculoRepositorio{
-
-    constructor(listaMotocicletas,listaTurismos,listaCaravanas){
-        this.listaMotocicletas = listaMotocicletas;
-        this.listaTurismos =listaTurismos;
-        this.listaCaravanas=listaCaravanas;
+ export class VehiculoRepositorio{
+    constructor(listaVehiculos){
+        this.listaVehiculos = listaVehiculos;
     }
 
     buscarPorMatricula(matricula){
-        let parkingCompleto = parkingCompleto.concat(this.listaMotocicletas,this.listaCaravanas,this.listaTurismos);
-        for(let i=0;i<parkingCompleto.lenght();i++){
-            if(parkingCompleto[i].matricula.equalsIgnoreCase(matricula)){
-                return parkingCompleto[i];
+        for(let i=0;i<this.listaVehiculos.lenght;i++){
+            if(this.listaVehiculos[i].matricula.equalsIgnoreCase(matricula)){
+                return this.listaVehiculos[i];
             }
         }
     }
     
     buscarPorId(id){
-        let parkingCompleto = parkingCompleto.concat(this.listaMotocicletas,this.listaCaravanas,this.listaTurismos);
-        for(let i=0;i<parkingCompleto.lenght();i++){
-            if(parkingCompleto[i].id == id){
-                return parkingCompleto[i];
+        for(let i=0;i<this.listaVehiculos.lenght;i++){
+            if(this.listaVehiculos[i].id == id){
+                return this.listaVehiculos[i];
             }
         }
     }
@@ -27,37 +22,14 @@ class VehiculoRepositorio{
 
    
     agregarVehiculo(vehiculo) {
-            if(vehiculo.tipo.equalsIgnoreCase("Motocicleta") && this.listaMotocicletas.lenght()<15){
-                return listaMotocicletas.push(vehiculo);
-            }else if(vehiculo.tipo.equalsIgnoreCase("Caravana") && this.listaCaravanas.lenght()<15){
-                return listaMotocicletas.push(vehiculo);
-            }else if(vehiculo.tipo.equalsIgnoreCase("Turismo") && this.listaTurismos.lenght()<15){
-                return listaMotocicletas.push(vehiculo);
-            }
-        
+        return this.listaVehiculos.push(vehiculo);
     }
 
+    eliminarVehiculo(vehiculo){
+        return  this.listaVehiculos.splice(this.listaVehiculos.indexOf(this.buscarPorId(vehiculo.id)),1);
+    }   
 
-    eliminarVehiculoPorId(id){
-        
-    }
-
-
-
-    /*
-    function calcularPago(horaLlegada,horaSalida, tipo){
-            if(tipo.equalsIgnoreCase("Motocicleta")){
-                let tarifacion=0.08;
-            }else if(tipo.equalsIgnoreCase("Caravana")){
-                let tarifacion=0.45;
-            }else if(tipo.equalsIgnoreCase("Turismo")){
-                let tarifacion=0.12;
-            }
-            minutosTotales =(horaSalida/60)-(horaLlegada/60);
-            return minutosTotales*tarifacion;
-        }
-        
-    */
+    
 
 
 }
