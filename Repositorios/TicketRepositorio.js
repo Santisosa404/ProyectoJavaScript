@@ -16,18 +16,20 @@ export class TicketRepositorio {
         ticket.pin = this.generarPin();
         console.log(`\nVehiculo con matricula: ${ticket.matricula}`)
         console.log(`Fecha llegada ${ticket.fechaLlegada}`);
-        console.log(`Su pin para recoger el vehiculo es ${ticket.pin}\n`);
+        console.log(`Su pin para recoger el vehiculo es ${ticket.pin}`);
         console.log(`El numero de la plaza es ${ticket.plaza}`)
-       
+       //cambiar ticket
+       this.listaTickets[this.listaTickets.indexOf(this.buscarPorPin(ticket.pin))]=ticket;
     }
 
     imprimirTicketRetirarda(ticket) {
         ticket.fechaLlegada = new Date();
-        console.log(`Vehiculo con matricula: ${ticket.matricula}\n`)
+        console.log(`Vehiculo con matricula: ${ticket.matricula}`)
         console.log(`Fecha llegada ${ticket.fechaLlegada}`);
         console.log(`Fecha salida ${ticket.fechaSalida}`);
         console.log(`El precio de su estancia es de ${ticket.precio}`);
-        console.log(`El numero de la plaza es ${ticket.plaza}`)
+        console.log(`El numero de la plaza es ${ticket.plaza}`);
+       this.listaTickets[this.listaTickets.indexOf(this.buscarPorPin(ticket.pin))]=ticket;
 
     }
     generarPin() {
@@ -44,7 +46,22 @@ export class TicketRepositorio {
             }
         }
     }
+    buscarPorMatricula(matricula){  
+       for (const i in this.listaTickets) {
+           if (this.listaTickets.matricula=matricula) {
+               return this.listaTickets[i];
+               
+           }
+       }
+    }
 
+    agregarTicket(ticket){
+        return this.listaTickets.push(ticket);
+    }
+
+    eliminarTicket(ticket){
+        return this.listaTickets.splice(this.listaTickets.indexOf(this.buscarPorPin(ticket.pin)),1);
+    }
     /*
         generarPlazas(){
             let listaPlazas = [];

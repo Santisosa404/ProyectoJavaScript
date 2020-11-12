@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Santisosa404/ProyectoJavaScript#readme",
   "dependencies": {
+    "14": "^3.1.6",
     "readline-sync": "^1.4.10"
   }
 }
