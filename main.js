@@ -9,7 +9,7 @@ import { ParkingRepositorio } from './Repositorios/ParkingRepositorio.js';
 import { AbonadoRepositorio } from './Repositorios/AbonadoRepositorio.js';
 import { Abonado } from './Modelo/Abonado.js';
 import { AbonoServicio } from './Servicios/AbonoServicio.js';
-import {Abono} from './Modelo/Abono.js';
+import { Abono } from './Modelo/Abono.js';
 
 
 
@@ -28,10 +28,11 @@ let turis1 = new Vehiculo("56678-B", 1, "Turismo", null, t1);
 
 let abonoServicio = new AbonoServicio();
 //Cliente abonado
-let us1 = new Abonado("Santi", 1, true, "77", turis1, 7);
+let us1 = new Abonado("Santi", 2, true, "77", turis1, 7);
 turis1.usuario = us1;
-let ab = new Abono(us1,abonoServicio.generarPin());
-us1.abono=ab;
+let ab = new Abono(us1, abonoServicio.generarPin());
+us1.abono = ab;
+console.log(ab);
 //Repositorio
 let parkingGeneral = new Parking(listaVehiculos);
 let abonadoRepositorio = new AbonadoRepositorio(listaAbonados);
@@ -56,7 +57,7 @@ do {
         //Abonado
         case '1':
             do {
-                opA = readline.question("Pulse 1 para depositar su vehiculo.\nPulse 2 para retirar su vehiculo ");
+                opA = readline.question("Pulse 1 para depositar su vehiculo.\nPulse 2 para retirar su vehiculo\nPulse 0 para salir");
                 switch (opA) {
 
                     case '1':
@@ -64,10 +65,20 @@ do {
                         let dni = readline.question("Introduzca su Dni");
                         let abonadoBuscado = abonadoRepositorio.buscarPorDni(dni);
                         repositorioVehiculo.agregarVehiculo(abonadoBuscado.vehiculo);
+                        console.log(`El pin para retirar su vehiculo es: ${abonadoBuscado.abono.pin}`);
                         console.log("Vehiculo ingresado correctamente.\n");
                         break;
                     case '2':
-                        
+                        matricula = readline.question("Introduzca su matricula");
+                        let pinAbono = readline.question("Introduzca su pin");
+                        let numPlaza = readline.question("Introduzca su numero de plaza");
+                        let vehiculoAbonado = repositorioVehiculo.buscarPorMatricula(matricula);
+                        let abonado = abonadoRepositorio.buscarPorNumPlaza(numPlaza);
+                        if (abonado.abono.pin == pinAbono) {
+                            repositorioVehiculo.eliminarVehiculo(vehiculoAbonado);
+                        } else {
+                            console.log("Pin de seguridad incorrecto");
+                        }
                         break;
                     default:
                         console.log("Pequeño error ");
@@ -112,7 +123,9 @@ do {
             break;
         //Admin
         case '3':
-
+            do {
+                
+            } while (opAd!=0);
             break;
 
         default:

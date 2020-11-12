@@ -4,11 +4,13 @@ export class VehiculoRepositorio {
     }
 
     buscarPorMatricula(matricula) {
-        for (let i of this.listaVehiculos) {
-            if (i.matricula==matricula) {
-                return i;
+            let resultado;
+        this.listaVehiculos.forEach(Vehiculo => {
+            if(Vehiculo.matricula==matricula){
+                resultado=Vehiculo;
             }
-        }
+        });
+        return resultado;
     }
    
 
