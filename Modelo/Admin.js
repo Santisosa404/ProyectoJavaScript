@@ -6,10 +6,5 @@ export class Admin extends Usuario{
         super(nombre,id);
         this.admin=admin;
     }
-    isAdmin(){
-        return this.admin;
-    }
-    setAdmin(admin){
-        this.admin=admin;
-    }
+   
 }

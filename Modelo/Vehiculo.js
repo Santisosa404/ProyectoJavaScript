@@ -9,32 +9,5 @@ export class Vehiculo{
         this.tipo=tipo;
         this.usuario=usuario;
     }
-
-    getId(){
-        return this.id;
-     }
- 
-    getMatricula(){
-         return this.matricula;
-     }
-     getUsuario(){
-         return this.usuario;
-     }
- 
-     getTipo(){
-         return this.tipo;
-     }
-     setUsuario(usuario){
-        this.usuario=usuario;
-     }
-     setMatricula(matricula){
-         this.matricula=matricula;
-     }
-     setId(id){
-        this.id=id;
-     }
-     setTipo(tipo){
-         this.tipo=tipo;
-     }
 }
 

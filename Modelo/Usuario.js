@@ -5,15 +5,5 @@ export class Usuario{
         this.nombre=nombre;
     }
 
-    getNombre(){
-        return this.nombre;
-    }
-    setNombre(nombre){
-        this.nombre=nombre;
-    }
-
-    getId(){
-        return this.id;
-    }
 
 }

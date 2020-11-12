@@ -5,7 +5,7 @@ export class Ticket{
     fechaLlegada;
     identificador;
     pin;
-    plaza
+    plaza;
     constructor(matricula,fechaLlegada,identificador,plaza){
         this.matricula=matricula;
         this.fechaLlegada=fechaLlegada;
