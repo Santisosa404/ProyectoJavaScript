@@ -1,10 +1,11 @@
-import { Usuario } from "./Usuario";
+import { Usuario } from "./Usuario.js";
 
 export class Admin extends Usuario{
-    admin;
-    constructor(nombre,id,admin) {
+    clave;
+    constructor(nombre,id,clave) {
         super(nombre,id);
-        this.admin=admin;
+        this.clave=clave;
     }
    
+
 }

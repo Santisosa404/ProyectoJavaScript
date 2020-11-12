@@ -10,6 +10,8 @@ import { AbonadoRepositorio } from './Repositorios/AbonadoRepositorio.js';
 import { Abonado } from './Modelo/Abonado.js';
 import { AbonoServicio } from './Servicios/AbonoServicio.js';
 import { Abono } from './Modelo/Abono.js';
+import { AdminRepositorio } from './Repositorios/AdminRepositorio.js';
+import { Admin } from './Modelo/Admin.js';
 
 
 
@@ -19,6 +21,7 @@ let listaVehiculos = [];
 let listaTickets = [];
 let listaTicketsPagados = [];
 let matricula = "";
+let listaAdmin=[];
 
 //Ticket
 let t1 = new Ticket("56678-B", new Date(2020 - 10 - 10), 2, 3);
@@ -32,7 +35,7 @@ let us1 = new Abonado("Santi", 2, true, "77", turis1, 7);
 turis1.usuario = us1;
 let ab = new Abono(us1, abonoServicio.generarPin());
 us1.abono = ab;
-console.log(ab);
+let ad1 = new Admin("Angel",3,1234);
 //Repositorio
 let parkingGeneral = new Parking(listaVehiculos);
 let abonadoRepositorio = new AbonadoRepositorio(listaAbonados);
@@ -40,14 +43,13 @@ let repositorioVehiculo = new VehiculoRepositorio(parkingGeneral.listaVehiculos)
 let ticketRepositorio = new TicketRepositorio(listaTickets);
 let servicioVehiculo = new VehiculoServicio(repositorioVehiculo);
 let parkingRepositorio = new ParkingRepositorio(parkingGeneral, repositorioVehiculo, ticketRepositorio);
-
+let adminRepositorio = new AdminRepositorio(listaAdmin);
 let opcion = -1;
-//Agregar abonado a la lista
-//Eliminar vehiculo
 repositorioVehiculo.agregarVehiculo(turis1);
 ticketRepositorio.agregarTicket(t1);
 abonadoRepositorio.agregarAbonado(us1);
-
+adminRepositorio.agregarAdmin(ad1);
+console.log(adminRepositorio.listaAdmin);
 do {
     console.log("Bienvenido al parking bustillo\nSi tiene abono pulse 1\nSi no lo tiene pulse 2\nAdministracion pulse 3");
     opcion = readline.question();
@@ -81,7 +83,7 @@ do {
                         }
                         break;
                     default:
-                        console.log("Pequeño error ");
+                        console.log("Numero erroneo");
                         break;
                 }
             } while (opA != 0);
@@ -123,13 +125,48 @@ do {
             break;
         //Admin
         case '3':
-            do {
-                
-            } while (opAd!=0);
+            console.log("Para confirmar su identidad introduzca su clave");
+            let clave=readline.question();
+            if (adminRepositorio.buscarPorClave(clave).clave==clave) {
+                let opAd;
+                do {
+                    console.log(`Bienvenido administrador`);
+                    opAd=readline.question("Pulse 1 para ver el estado del parking.\n"
+                    +"Pulse 2 para facturación\nPulse 3 para consultar los abonados\n"
+                    +"Pulse 4 para ver los abonos\nPulse 5 para la caducidad de los abonos.\n");
+                    switch (opAd) {
+                        case '1':
+                                
+                            break;
+
+                        case '2':
+
+                            break;
+
+                        case '3':
+
+                            break;
+
+                        case '4':
+
+                            break;
+
+                        case '5':
+                            
+                            break;
+
+                        default:
+                            
+                            break;
+                    }
+                } while (opAd != 0);
+            }else{
+                console.log("Inicio de sesion incorrecto.");
+                console.log("Reiniciando...");
+            }
             break;
 
         default:
-            console.log(opcion);
             console.log("Este es el default");
             break;
     }
