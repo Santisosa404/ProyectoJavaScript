@@ -12,7 +12,7 @@ import { AbonoServicio } from './Servicios/AbonoServicio.js';
 import { Abono } from './Modelo/Abono.js';
 import { AdminRepositorio } from './Repositorios/AdminRepositorio.js';
 import { Admin } from './Modelo/Admin.js';
-
+import moment from 'moment';
 
 
 
@@ -21,10 +21,11 @@ let listaVehiculos = [];
 let listaTickets = [];
 let listaTicketsPagados = [];
 let matricula = "";
-let listaAdmin=[];
-
+let listaAdmin = [];
+let hora = moment();
 //Ticket
-let t1 = new Ticket("56678-B", new Date(2020 - 10 - 10), 2, 3);
+let t1 = new Ticket("56678-B", moment([2020,1,3]).format("MMM Do YY"), 2, 3);
+let t2 = new Ticket("1234", moment([2020,4,5]).format("MMM Do YY"), 3, 4);
 
 //Vehiculos
 let turis1 = new Vehiculo("56678-B", 1, "Turismo", null, t1);
@@ -35,21 +36,29 @@ let us1 = new Abonado("Santi", 2, true, "77", turis1, 7);
 turis1.usuario = us1;
 let ab = new Abono(us1, abonoServicio.generarPin());
 us1.abono = ab;
-let ad1 = new Admin("Angel",3,1234);
+let ad1 = new Admin("Angel", 3, 1234);
 //Repositorio
 let parkingGeneral = new Parking(listaVehiculos);
 let abonadoRepositorio = new AbonadoRepositorio(listaAbonados);
+abonadoRepositorio.agregarAbonado(us1);
+
 let repositorioVehiculo = new VehiculoRepositorio(parkingGeneral.listaVehiculos);
+repositorioVehiculo.agregarVehiculo(turis1);
+
 let ticketRepositorio = new TicketRepositorio(listaTickets);
+ticketRepositorio.agregarTicket(t1);
+
 let servicioVehiculo = new VehiculoServicio(repositorioVehiculo);
-let parkingRepositorio = new ParkingRepositorio(parkingGeneral, repositorioVehiculo, ticketRepositorio);
+let parkingRepositorio = new ParkingRepositorio(parkingGeneral, repositorioVehiculo, ticketRepositorio, abonadoRepositorio);
 let adminRepositorio = new AdminRepositorio(listaAdmin);
 let opcion = -1;
-repositorioVehiculo.agregarVehiculo(turis1);
-ticketRepositorio.agregarTicket(t1);
-abonadoRepositorio.agregarAbonado(us1);
 adminRepositorio.agregarAdmin(ad1);
-console.log(adminRepositorio.listaAdmin);
+let ticketPagadoEjemplo=new Ticket("45",moment(2020/1/3),4545,3);
+ticketPagadoEjemplo.fechaSalida=moment(2020/4/5);
+listaTicketsPagados.push(ticketPagadoEjemplo);
+
+
+console.log(parkingRepositorio.facturacion(moment(2020/1/3),moment(2020/5/5),listaTicketsPagados));
 do {
     console.log("Bienvenido al parking bustillo\nSi tiene abono pulse 1\nSi no lo tiene pulse 2\nAdministracion pulse 3");
     opcion = readline.question();
@@ -92,55 +101,62 @@ do {
         //No abonado
         case '2':
             let opU = -1;
-            do {
-                console.log("Para depositar un vehiculo pulse 1\nPara retirar un vehiculo pulse 2")
-                opU = readline.question();
-                switch (opU) {
-                    case '1':
-                        matricula = readline.question("Para ingresar un vehiculo diga su matricula")
-                        let tipo = readline.question("Tipo de vehiculo a ingresar");
-                        servicioVehiculo.agregarVehiculo(new Vehiculo(matricula, Math.floor((Math.random() * (45 - 1) - 1)), tipo, null, Math.floor((Math.random() * (45 - 1) - 1))));
-                        ticketRepositorio.imprimirTicketDeposito(ticketRepositorio.generarTicket(repositorioVehiculo.buscarPorMatricula(matricula)));
-                        break;
+            if (parkingRepositorio.plazasDisponibles()) {
+                do {
 
-                    case '2':
-                        matricula = readline.question("Introduzca su matricula");
-                        let idPlaza = readline.question("Introduce el numero de plaza");
-                        let pin = readline.question("Introduzca el pin de recogida")
-                        if (repositorioVehiculo.buscarPorMatricula(matricula) != null) {
-                            console.log(`El precio de la estancia fue de ${parkingRepositorio.precioEstancia(matricula, pin)} €`);
-                            repositorioVehiculo.eliminarVehiculo(repositorioVehiculo.buscarPorMatricula(matricula));
-                            //Agrego a la lista de tickets pagados
-                            listaTicketsPagados.push(ticketRepositorio.buscarPorMatricula(matricula));
-                            //Borro el ticket de la lista antigua
-                            ticketRepositorio.eliminarTicket(ticketRepositorio.buscarPorMatricula(matricula));
-                        } else {
-                            console.log("No ha sido posible encontrar su vehiculo");
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            } while (opU != 0)
+                    console.log("Para depositar un vehiculo pulse 1\nPara retirar un vehiculo pulse 2")
+                    opU = readline.question();
+                    switch (opU) {
+                        case '1':
+                            matricula = readline.question("Para ingresar un vehiculo diga su matricula")
+                            let tipo = readline.question("Tipo de vehiculo a ingresar");
+                            servicioVehiculo.agregarVehiculo(new Vehiculo(matricula, Math.floor((Math.random() * (45 - 1) - 1)), tipo, null, Math.floor((Math.random() * (45 - 1) - 1))));
+                            ticketRepositorio.imprimirTicketDeposito(ticketRepositorio.generarTicket(repositorioVehiculo.buscarPorMatricula(matricula)));
+                            break;
+
+                        case '2':
+                            matricula = readline.question("Introduzca su matricula");
+                            let idPlaza = readline.question("Introduce el numero de plaza");
+                            let pin = readline.question("Introduzca el pin de recogida")
+                            if (repositorioVehiculo.buscarPorMatricula(matricula) != null) {
+                                console.log(`El precio de la estancia fue de ${parkingRepositorio.precioEstancia(matricula, pin)} €`);
+                                repositorioVehiculo.eliminarVehiculo(repositorioVehiculo.buscarPorMatricula(matricula));
+                                //Agrego a la lista de tickets pagados
+                                listaTicketsPagados.push(ticketRepositorio.buscarPorPin(pin));
+                                //Borro el ticket de la lista antigua
+                                ticketRepositorio.eliminarTicket(ticketRepositorio.buscarPorPin(pin));
+                            } else {
+                                console.log("No ha sido posible encontrar su vehiculo");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } while (opU != 0)
+            }else{
+                console.log("Disculpe las molestias pero actualmente no quedan plazas disponibles");
+            }
             break;
         //Admin
         case '3':
             console.log("Para confirmar su identidad introduzca su clave");
-            let clave=readline.question();
-            if (adminRepositorio.buscarPorClave(clave).clave==clave) {
+            let clave = readline.question();
+            if (adminRepositorio.buscarPorClave(clave).clave == clave) {
                 let opAd;
                 do {
                     console.log(`Bienvenido administrador`);
-                    opAd=readline.question("Pulse 1 para ver el estado del parking.\n"
-                    +"Pulse 2 para facturación\nPulse 3 para consultar los abonados\n"
-                    +"Pulse 4 para ver los abonos\nPulse 5 para la caducidad de los abonos.\n");
+                    opAd = readline.question("Pulse 1 para ver el estado del parking.\n"
+                        + "Pulse 2 para facturación\nPulse 3 para consultar los abonados\n"
+                        + "Pulse 4 para ver los abonos\nPulse 5 para la caducidad de los abonos.\n");
                     switch (opAd) {
                         case '1':
-                                
+                                parkingRepositorio.estadoParking();
                             break;
 
                         case '2':
-
+                            console.log("Para ver la facturacion, indique las fechas y horas a buscar");
+                            let desde=moment(readline.question("Introduzca la primera fecha y la hora"),"DD MM YYYY hh:mm:ss",true);
+                            console.log(desde);
                             break;
 
                         case '3':
@@ -152,15 +168,15 @@ do {
                             break;
 
                         case '5':
-                            
+
                             break;
 
                         default:
-                            
+
                             break;
                     }
                 } while (opAd != 0);
-            }else{
+            } else {
                 console.log("Inicio de sesion incorrecto.");
                 console.log("Reiniciando...");
             }

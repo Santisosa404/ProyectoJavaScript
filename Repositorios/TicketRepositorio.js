@@ -1,4 +1,5 @@
 import { Ticket } from '../Modelo/Ticket.js';
+import moment from 'moment';
 
 export class TicketRepositorio {
     listaTickets;
@@ -23,7 +24,7 @@ export class TicketRepositorio {
     }
 
     imprimirTicketRetirarda(ticket) {
-        ticket.fechaLlegada = new Date();
+        ticket.fechaLlegada = moment();
         console.log(`Vehiculo con matricula: ${ticket.matricula}`)
         console.log(`Fecha llegada ${ticket.fechaLlegada}`);
         console.log(`Fecha salida ${ticket.fechaSalida}`);

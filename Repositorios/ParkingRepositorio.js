@@ -3,10 +3,12 @@ export class ParkingRepositorio{
     parking;
     vehiculoRepositorio;
     ticketRepositorio;
-    constructor(parking,vehiculoRepositorio,ticketRepositorio) {
+    abonadoRepositorio;
+    constructor(parking,vehiculoRepositorio,ticketRepositorio,abonadoRepositorio) {
         this.parking=parking;
         this.vehiculoRepositorio=vehiculoRepositorio;
         this.ticketRepositorio = ticketRepositorio;
+        this.abonadoRepositorio=abonadoRepositorio;
     }
 
     precioEstancia(matricula,pin){
@@ -25,6 +27,53 @@ export class ParkingRepositorio{
         }
     }
 
+    plazasDisponibles(){
+        let contTicket=0;
+        let contAbonado=0;
+        this.ticketRepositorio.listaTickets.forEach(Ticket => {
+            contTicket++;
+        });
+        this.abonadoRepositorio.listaAbonados.forEach(Abonado => {
+            contAbonado++;
+        });
+        let ocupadas =contTicket+contAbonado;
+        if(ocupadas < this.parking.numPlazas){
+            console.log(`Quedan ${this.parking.numPlazas-ocupadas} plazas disponibles`);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    estadoParking(){
+        let contTicket=0;
+        let numPlazasTicket=[];
+        let contAbonado=0;
+        let numPlazasAbonados=[]
+        this.ticketRepositorio.listaTickets.forEach(Ticket => {
+            contTicket++;
+            numPlazasTicket.push(Ticket.plaza);
+        });
+        this.abonadoRepositorio.listaAbonados.forEach(Abonado => {
+            contAbonado++;
+            numPlazasAbonados.push(Abonado.numPlaza);
+        });
+        let ocupadas =contTicket+contAbonado;
+        console.log(`Hay ${ocupadas} plazas ocupadas\nLas plazas abonadas son ${contAbonado}\nLas plazas ocupadas por no abonados son ${contTicket}`);
+        console.log(`Los numeros de las plazas abonadas son ${numPlazasAbonados}`);
+        console.log(`Los numeros de las plazas con ticket son ${numPlazasTicket}\n`);
+
+    }
+
+    facturacion(fecha1,fecha2,listaTicketsPagados){
+        let facturados =[]
+       listaTicketsPagados.forEach(Ticket => {
+           if(Ticket.fechaSalida.isBetween(fecha1,fecha2)){
+                facturados.push(Ticket);
+           }
+       });
+        return facturados;
+    }
     
     
 }
