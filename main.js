@@ -53,12 +53,14 @@ let parkingRepositorio = new ParkingRepositorio(parkingGeneral, repositorioVehic
 let adminRepositorio = new AdminRepositorio(listaAdmin);
 let opcion = -1;
 adminRepositorio.agregarAdmin(ad1);
-let ticketPagadoEjemplo=new Ticket("45",moment(2020/1/3),4545,3);
-ticketPagadoEjemplo.fechaSalida=moment(2020/4/5);
+
+
+let ticketPagadoEjemplo=new Ticket("45",moment([2020,1,3]),4545,3);
+ticketPagadoEjemplo.fechaSalida=moment([2020,4,5]);
 listaTicketsPagados.push(ticketPagadoEjemplo);
 
 
-console.log(parkingRepositorio.facturacion(moment(2020/1/3),moment(2020/5/5),listaTicketsPagados));
+
 do {
     console.log("Bienvenido al parking bustillo\nSi tiene abono pulse 1\nSi no lo tiene pulse 2\nAdministracion pulse 3");
     opcion = readline.question();
@@ -154,9 +156,13 @@ do {
                             break;
 
                         case '2':
+                            console.log(listaTicketsPagados);
                             console.log("Para ver la facturacion, indique las fechas y horas a buscar");
-                            let desde=moment(readline.question("Introduzca la primera fecha y la hora"),"DD MM YYYY hh:mm:ss",true);
-                            console.log(desde);
+                            console.log("Nota: Para una ejecucion corecta del programa introduzca las fechas en este formato YYYY-MM-DD hh:mm:ss");
+                            let desde=moment(readline.question("Introduzca la primera fecha y la hora: "),"YYYY-MM-DD hh:mm:ss");
+                            let hasta=moment(readline.question("Introduzca la segunda fecha y la hora: "),"YYYY-MM-DD hh:mm:ss");
+                            console.log(parkingRepositorio.facturacion(desde,hasta,listaTicketsPagados));
+                            
                             break;
 
                         case '3':

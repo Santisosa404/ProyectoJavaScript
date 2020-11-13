@@ -1,4 +1,4 @@
-
+import moment from 'moment';
 export class ParkingRepositorio{
     parking;
     vehiculoRepositorio;
@@ -69,6 +69,7 @@ export class ParkingRepositorio{
         let facturados =[]
        listaTicketsPagados.forEach(Ticket => {
            if(Ticket.fechaSalida.isBetween(fecha1,fecha2)){
+               console.log(Ticket);
                 facturados.push(Ticket);
            }
        });
