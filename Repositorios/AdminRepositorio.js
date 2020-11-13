@@ -11,7 +11,6 @@ export class AdminRepositorio{
                 resultado= Admin;
             }
         });
-        console.log(resultado);
         return resultado;
     }
 

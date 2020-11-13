@@ -13,10 +13,13 @@ import { Abono } from './Modelo/Abono.js';
 import { AdminRepositorio } from './Repositorios/AdminRepositorio.js';
 import { Admin } from './Modelo/Admin.js';
 import moment from 'moment';
+import { AbonadoServicio } from './Servicios/AbonadoServicio.js';
+import { AbonoRepositorio } from './Repositorios/AbonoRepositorio.js';
 
 
 
 let listaAbonados = [];
+let listaAbonos=[];
 let listaVehiculos = [];
 let listaTickets = [];
 let listaTicketsPagados = [];
@@ -30,12 +33,18 @@ let t2 = new Ticket("1234", moment([2020,4,5]).format("MMM Do YY"), 3, 4);
 //Vehiculos
 let turis1 = new Vehiculo("56678-B", 1, "Turismo", null, t1);
 
-let abonoServicio = new AbonoServicio();
+let abonoRepositorio = new AbonoRepositorio(listaAbonos);
+let abonoServicio = new AbonoServicio(abonoRepositorio);
+
 //Cliente abonado
-let us1 = new Abonado("Santi", 2, true, "77", turis1, 7);
+let us1 = new Abonado("Santi", 2, true, "77", turis1, 7,123456);
 turis1.usuario = us1;
-let ab = new Abono(us1, abonoServicio.generarPin());
+
+let ab = new Abono(us1, 666666,"Anual",moment(),null);
+console.log(ab);
+ab.fechaCancelacion=abonoServicio.generarFechaCancelacion(ab);
 us1.abono = ab;
+console.log(ab);
 let ad1 = new Admin("Angel", 3, 1234);
 //Repositorio
 let parkingGeneral = new Parking(listaVehiculos);
@@ -45,12 +54,15 @@ abonadoRepositorio.agregarAbonado(us1);
 let repositorioVehiculo = new VehiculoRepositorio(parkingGeneral.listaVehiculos);
 repositorioVehiculo.agregarVehiculo(turis1);
 
+
 let ticketRepositorio = new TicketRepositorio(listaTickets);
 ticketRepositorio.agregarTicket(t1);
 
 let servicioVehiculo = new VehiculoServicio(repositorioVehiculo);
 let parkingRepositorio = new ParkingRepositorio(parkingGeneral, repositorioVehiculo, ticketRepositorio, abonadoRepositorio);
 let adminRepositorio = new AdminRepositorio(listaAdmin);
+let abonadoServicio = new AbonadoServicio(abonadoRepositorio);
+abonoServicio.agregarAbono(ab)
 let opcion = -1;
 adminRepositorio.agregarAdmin(ad1);
 
@@ -149,7 +161,7 @@ do {
                     console.log(`Bienvenido administrador`);
                     opAd = readline.question("Pulse 1 para ver el estado del parking.\n"
                         + "Pulse 2 para facturación\nPulse 3 para consultar los abonados\n"
-                        + "Pulse 4 para ver los abonos\nPulse 5 para la caducidad de los abonos.\n");
+                        + "Pulse 4 para gestionar los abonos\nPulse 5 para la caducidad de los abonos.\n");
                     switch (opAd) {
                         case '1':
                                 parkingRepositorio.estadoParking();
@@ -161,24 +173,77 @@ do {
                             console.log("Nota: Para una ejecucion corecta del programa introduzca las fechas en este formato YYYY-MM-DD hh:mm:ss");
                             let desde=moment(readline.question("Introduzca la primera fecha y la hora: "),"YYYY-MM-DD hh:mm:ss");
                             let hasta=moment(readline.question("Introduzca la segunda fecha y la hora: "),"YYYY-MM-DD hh:mm:ss");
-                            console.log(parkingRepositorio.facturacion(desde,hasta,listaTicketsPagados));
-                            
-                            break;
+                            parkingRepositorio.facturacion(desde,hasta,listaTicketsPagados);                            
+                        break;
 
                         case '3':
+                            let opGA;
+                            do{
+                                opGA=readline.question("Pulse 1 para dar de alta a un abonado.\n"
+                                +"Pulse 2 para modificar un abonado.\n"
+                                +"Pulse 3 para dar de baja a un abonado.\n");
+                                switch(opGA){
+                                    case '1':
+                                            console.log("Introduzca los datos del nuevo abonado");
+                                            let nombre = readline.question("Nombre del abonado: ");
+                                            let dni = readline.question("Dni del abonado: ");
+                                            let numTarjeta=readline.question("Intruzca el numero de tarjeta para el abono: ")
+                                            let matricula =readline.question("Matricula del coche: ");
+                                            let tipo = readline.question("Tipo de vehiculo: ");
+                                            servicioVehiculo.agregarVehiculo(new Vehiculo(matricula,servicioVehiculo.generarId(),tipo,null,null));
+                                            let numPlaza=readline.question("Eliga un numero de plaza");
+                                            
+                                            abonadoServicio.agregarAbonado(new Abonado(nombre,abonadoServicio.generarId(),null,dni,servicioVehiculo.buscarPorMatricula(matricula),numPlaza,numTarjeta));
+                                            servicioVehiculo.buscarPorMatricula(matricula).usuario=abonadoServicio.buscarPorDni(dni);
+                                            let tarifa=readline.question("Elija la tarifa: Mensual, Trimestral, Semestral, Anual ");
+                                            let pin =abonoServicio.generarPin();
+                                            abonoServicio.agregarAbono(new Abono(abonadoServicio.buscarPorDni(dni),pin,tarifa,moment(),null));
+                                            abonoServicio.buscarPorPin(pin).fechaCancelacion= abonoServicio.generarFechaCancelacion(abonoServicio.buscarPorPin(pin));
+                                            abonoServicio.buscarPorPin(pin).abonado=abonadoServicio.buscarPorDni(dni);
+                                            console.log("Abonado creado correctamente, disfrute del parking");
+                                        break;
+                                    case '2':
+                                        let opE;
+                                            console.log(abonadoRepositorio.listaAbonados);
+                                            let dniE = readline.question("Introduzca el dni del abonado a editar");
+                                            if(abonadoServicio.buscarPorDni(dniE).dni==dniE){
+                                                do{
+                                                    opE=readline.question("Pulse 1 para cambiar los datos personales\nPulse 2 para cambiar la fecha de cancelacion");
+                                                    switch (opE) {
+                                                        case '1':
+                                                            abonadoServicio.buscarPorDni(dniE).nombre= readline.question("Edite el nombre del abonado: ");
+                                                            abonadoServicio.buscarPorDni(dniE).numTarjeta= readline.question("Edite el numero de tarjeta para el abono: ")
+                                                            abonadoServicio.buscarPorDni(dniE).numPlaza= readline.question("Edite su numero de plaza");
+                                                            abonadoServicio.buscarPorDni(dniE).dni= readline.question("Edite el dni del abonado: ");
+                                                            break;
+                                                        case '2':
+                                                            break;
+                                                        default:
+                                                            console.log("No hay opcion para el numero seleccionado");
+                                                            break;
+                                                    }
+                                                }while(opE)
+                                            }else{
+                                                console.log("Abonado no encontrado");
+                                            }
+                                        break;
+                                    default:
 
-                            break;
+                                        break;
+                                }
+                            }while(opGA);
+                            console.log("");
+                        break;
 
                         case '4':
-
-                            break;
-
+                            console.log("TODO");
+                        break;
                         case '5':
-
+                            console.log("TODO");
                             break;
 
                         default:
-
+                            console.log("Numero incorrecto");
                             break;
                     }
                 } while (opAd != 0);

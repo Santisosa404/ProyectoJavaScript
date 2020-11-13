@@ -17,7 +17,7 @@ export class AbonadoRepositorio{
     buscarPorDni(dni){
         let devolver;
         this.listaAbonados.forEach(Abonado => {
-            if(Abonado.getDni == dni){
+            if(Abonado.dni == dni){
                 devolver=Abonado;
             }
         });

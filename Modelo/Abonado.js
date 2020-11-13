@@ -5,16 +5,16 @@ export class Abonado extends Usuario {
     vehiculo;
     abono;
     numPlaza;
-    constructor(nombre, id, abono, dni, vehiculo,numPlaza) {
+    numTarjeta;
+    constructor(nombre, id, abono, dni, vehiculo,numPlaza,numTarjeta) {
         super(nombre, id)
         this.abono = abono;
         this.dni = dni;
         this.vehiculo = vehiculo;
         this.numPlaza=numPlaza;
+        this.numTarjeta=numTarjeta;
     }
-    get getDni(){
-        return this.dni;
-    }
+   
 
 
 
