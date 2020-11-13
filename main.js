@@ -15,9 +15,10 @@ import { Admin } from './Modelo/Admin.js';
 import moment from 'moment';
 import { AbonadoServicio } from './Servicios/AbonadoServicio.js';
 import { AbonoRepositorio } from './Repositorios/AbonoRepositorio.js';
+import { TicketServicio } from './Servicios/ticketServicio.js';
 
 
-
+//Variables 
 let listaAbonados = [];
 let listaAbonos=[];
 let listaVehiculos = [];
@@ -25,16 +26,22 @@ let listaTickets = [];
 let listaTicketsPagados = [];
 let matricula = "";
 let listaAdmin = [];
-let hora = moment();
-//Ticket
+let opcion = -1;
+let opA;
+let opU = -1;
+let opAd;
+let opGA;
+let opE;
+
+
+//Modelos
 let t1 = new Ticket("56678-B", moment([2020,1,3]).format("MMM Do YY"), 2, 3);
 let t2 = new Ticket("1234", moment([2020,4,5]).format("MMM Do YY"), 3, 4);
 
 //Vehiculos
+
 let turis1 = new Vehiculo("56678-B", 1, "Turismo", null, t1);
 
-let abonoRepositorio = new AbonoRepositorio(listaAbonos);
-let abonoServicio = new AbonoServicio(abonoRepositorio);
 
 //Cliente abonado
 let us1 = new Abonado("Santi", 2, true, "77", turis1, 7,123456);
@@ -44,27 +51,28 @@ let ab = new Abono(us1, 666666,"Anual",moment(),null);
 console.log(ab);
 ab.fechaCancelacion=abonoServicio.generarFechaCancelacion(ab);
 us1.abono = ab;
-console.log(ab);
+
 let ad1 = new Admin("Angel", 3, 1234);
-//Repositorio
 let parkingGeneral = new Parking(listaVehiculos);
+
+//Repositorios
 let abonadoRepositorio = new AbonadoRepositorio(listaAbonados);
 abonadoRepositorio.agregarAbonado(us1);
-
 let repositorioVehiculo = new VehiculoRepositorio(parkingGeneral.listaVehiculos);
 repositorioVehiculo.agregarVehiculo(turis1);
-
-
 let ticketRepositorio = new TicketRepositorio(listaTickets);
 ticketRepositorio.agregarTicket(t1);
-
-let servicioVehiculo = new VehiculoServicio(repositorioVehiculo);
 let parkingRepositorio = new ParkingRepositorio(parkingGeneral, repositorioVehiculo, ticketRepositorio, abonadoRepositorio);
 let adminRepositorio = new AdminRepositorio(listaAdmin);
-let abonadoServicio = new AbonadoServicio(abonadoRepositorio);
-abonoServicio.agregarAbono(ab)
-let opcion = -1;
 adminRepositorio.agregarAdmin(ad1);
+let abonoRepositorio = new AbonoRepositorio(listaAbonos);
+
+//Servicios
+let servicioVehiculo = new VehiculoServicio(repositorioVehiculo);
+let abonadoServicio = new AbonadoServicio(abonadoRepositorio);
+let abonoServicio = new AbonoServicio(abonoRepositorio);
+let ticketServicio = new TicketServicio(ticketRepositorio);
+abonoServicio.agregarAbono(ab)
 
 
 let ticketPagadoEjemplo=new Ticket("45",moment([2020,1,3]),4545,3);
@@ -76,7 +84,6 @@ listaTicketsPagados.push(ticketPagadoEjemplo);
 do {
     console.log("Bienvenido al parking bustillo\nSi tiene abono pulse 1\nSi no lo tiene pulse 2\nAdministracion pulse 3");
     opcion = readline.question();
-    let opA;
     switch (opcion) {
 
         //Abonado
@@ -114,7 +121,6 @@ do {
             break;
         //No abonado
         case '2':
-            let opU = -1;
             if (parkingRepositorio.plazasDisponibles()) {
                 do {
 
@@ -124,8 +130,8 @@ do {
                         case '1':
                             matricula = readline.question("Para ingresar un vehiculo diga su matricula")
                             let tipo = readline.question("Tipo de vehiculo a ingresar");
-                            servicioVehiculo.agregarVehiculo(new Vehiculo(matricula, Math.floor((Math.random() * (45 - 1) - 1)), tipo, null, Math.floor((Math.random() * (45 - 1) - 1))));
-                            ticketRepositorio.imprimirTicketDeposito(ticketRepositorio.generarTicket(repositorioVehiculo.buscarPorMatricula(matricula)));
+                            servicioVehiculo.agregarVehiculo(new Vehiculo(matricula, servicioVehiculo.generarId(), tipo, null, Math.floor((Math.random() * (45 - 1) - 1))));
+                            ticketServicio.imprimirTicketDeposito(ticketServicio.generarTicket(repositorioVehiculo.buscarPorMatricula(matricula)));
                             break;
 
                         case '2':
@@ -156,7 +162,6 @@ do {
             console.log("Para confirmar su identidad introduzca su clave");
             let clave = readline.question();
             if (adminRepositorio.buscarPorClave(clave).clave == clave) {
-                let opAd;
                 do {
                     console.log(`Bienvenido administrador`);
                     opAd = readline.question("Pulse 1 para ver el estado del parking.\n"
@@ -177,7 +182,6 @@ do {
                         break;
 
                         case '3':
-                            let opGA;
                             do{
                                 opGA=readline.question("Pulse 1 para dar de alta a un abonado.\n"
                                 +"Pulse 2 para modificar un abonado.\n"
@@ -203,7 +207,6 @@ do {
                                             console.log("Abonado creado correctamente, disfrute del parking");
                                         break;
                                     case '2':
-                                        let opE;
                                             console.log(abonadoRepositorio.listaAbonados);
                                             let dniE = readline.question("Introduzca el dni del abonado a editar");
                                             if(abonadoServicio.buscarPorDni(dniE).dni==dniE){
@@ -254,7 +257,7 @@ do {
             break;
 
         default:
-            console.log("Este es el default");
+            console.log("Numero incorrecto");
             break;
     }
 } while (opcion != 0);
