@@ -34,6 +34,7 @@ let opGA;
 let opE;
 
 
+
 //Modelos
 let t1 = new Ticket("56678-B", moment([2020,1,3]).format("MMM Do YY"), 2, 3);
 let t2 = new Ticket("1234", moment([2020,4,5]).format("MMM Do YY"), 3, 4);
@@ -48,8 +49,6 @@ let us1 = new Abonado("Santi", 2, true, "77", turis1, 7,123456);
 turis1.usuario = us1;
 
 let ab = new Abono(us1, 666666,"Anual",moment(),null);
-console.log(ab);
-ab.fechaCancelacion=abonoServicio.generarFechaCancelacion(ab);
 us1.abono = ab;
 
 let ad1 = new Admin("Angel", 3, 1234);
@@ -73,6 +72,7 @@ let abonadoServicio = new AbonadoServicio(abonadoRepositorio);
 let abonoServicio = new AbonoServicio(abonoRepositorio);
 let ticketServicio = new TicketServicio(ticketRepositorio);
 abonoServicio.agregarAbono(ab)
+ab.fechaCancelacion=abonoServicio.generarFechaCancelacion(ab);
 
 
 let ticketPagadoEjemplo=new Ticket("45",moment([2020,1,3]),4545,3);
