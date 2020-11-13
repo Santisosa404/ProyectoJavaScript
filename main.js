@@ -107,6 +107,7 @@ do {
                         let vehiculoAbonado = repositorioVehiculo.buscarPorMatricula(matricula);
                         let abonado = abonadoRepositorio.buscarPorNumPlaza(numPlaza);
                         if (abonado.abono.pin == pinAbono) {
+                            console.log(vehiculoAbonado);
                             repositorioVehiculo.eliminarVehiculo(vehiculoAbonado);
                         } else {
                             console.log("Pin de seguridad incorrecto");
